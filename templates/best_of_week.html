@@ -1,0 +1,25 @@
+{% extends "show_links.html" %}
+
+{% block stories %}
+        <div class="links">
+          <table border=0 cellpadding=0 cellspacing=0>
+             {% for link in links %}
+            <tr>
+              <td align=right valign=top class="title">{{ loop.index }}.</td>
+              <td><center><a href="#"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+              <td class="title"><a href={{ link.link}}>{{ link.headline}}</a><span class="sublink"> ({{link.main_url}}) </span></td>
+            </tr>
+            <tr>
+              <td colspan=2></td>
+              <td class="subtext">by @{{link.screen_name}}, {{ link.score}} points {{time[loop.index0]}} | comments</td>
+            </tr>
+            <tr style="height:3px"></tr>
+            {% endfor %}
+          </table>
+          <br>
+          <div style="border-top: 2px solid #ff6600; font-size: 10pt;">
+            <h1 style="text-align: center; margin-top:5px;"> You need a Junior Developer? Great.</h1><h1 style="text-align: center">fnava621@gmail.com - Lets Chat</h1>
+          <br>
+          </div>
+        </div>
+{% endblock %}

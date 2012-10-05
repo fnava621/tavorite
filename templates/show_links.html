@@ -1,0 +1,64 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Alpha news</title>
+  <link rel="shortcut icon" href="/static/img/lambda.gif">
+  <link rel="stylesheet" href="/static/css/main.css">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-34173082-1']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+</head>
+<body>
+  <div class="page">
+    <div class="container">
+        <nav>
+            <ul>
+             <li><a href="#"><img src="/static/img/lambda.gif" alt="" /></a></li>
+		     <li><a class="nava" href="/news">Nava News</a></li>
+             <li class="nav-item"><a href="/photos">photos</a></li>
+             <li class="nav-item">|</li>
+             <li class="nav-item"><a href="videos">videos</a></li>
+             <li class="nav-item">|</li>
+             <li class="nav-item"><a href="/best">best of week</a></li>
+	       </ul>       
+        </nav>
+        {% block stories %}
+
+        <div class="links">
+          <table border=0 cellpadding=0 cellspacing=0>
+             {% for link in links %}
+            <tr>
+              <td align=right valign=top class="title">{{ loop.index }}.</td>
+              <td><center><a href="#"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+              <td class="title"><a href={{ link.link}}>{{ link.headline}}</a><span class="sublink"> ({{link.main_url}}) </span></td>
+            </tr>
+            <tr>
+              <td colspan=2></td>
+              <td class="subtext">{{link.score}} points by @{{link.screen_name}} {{time[loop.index0]}} | comments</td>
+            </tr>
+            <tr style="height:1px"></tr>
+            {% endfor %}
+          </table>
+          <br>
+          <div style="border-top: 2px solid #ff6600; font-size: 10pt;">
+            <h1 style="text-align: center; margin-top:5px;"> You need a Junior Developer? Great.</h1><h1 style="text-align: center">fnava621@gmail.com - Lets Chat</h1>
+          <br>
+          </div>
+        </div>
+        {% endblock %}
+  </div>
+</div>
+</body>
+</html>

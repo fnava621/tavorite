@@ -1,0 +1,17 @@
+*.db
+*.txt~
+*.pyc
+*.pyo
+*.py~
+*.py#
+*.html~
+*#
+venv
+*.DS_Store
+.gitignore~
+*.js~
+/logs/*.log
+/tmp
+*scatch.py
+keys.py
+build
