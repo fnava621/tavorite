@@ -5,33 +5,31 @@
   <title>Alpha news</title>
   <link rel="shortcut icon" href="/static/img/lambda.gif">
   <link rel="stylesheet" href="/static/css/main.css">
+  <link rel="stylesheet" href="/static/css/tipsy.css">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-34173082-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
+  <script src="/static/js/jquery.tipsy.js"></script>
 </head>
 <body>
   <div class="page">
     <div class="container">
         <nav>
             <ul>
-             <li><a href="#"><img src="/static/img/lambda.gif" alt="" /></a></li>
-		     <li><a class="nava" href="/news">Nava News</a></li>
+             <li><a href="/"><img src="/static/img/lambda.gif" alt="" /></a></li>
+		     <li><a class="nava" href="/">Tavorite</a></li>
              <li class="nav-item"><a href="/photos">photos</a></li>
              <li class="nav-item">|</li>
-             <li class="nav-item"><a href="videos">videos</a></li>
+             <li class="nav-item"><a href="/videos">videos</a></li>
              <li class="nav-item">|</li>
              <li class="nav-item"><a href="/best">best of week</a></li>
+             <li class="nav-item">|</li>
+             <li class="nav-item"><a id="submit" title="Must be Logged In" href="/submit">submit</a></li>
+             {% if session['access_token'] %}
+               <li class="nav-item" style="float: right; padding-right:2px;"><a href="/logout">logout</a></li>
+               <li class="nav-item" style="float: right; padding-right:2px;">|</li>
+               <li class="nav-item" style="float: right; padding-right:2px;"><a href={{ "http://alpha.app.net/" + username }}>{{ username }}</a></li>
+             {% else %}
+               <li class="nav-item" style="float: right;"><a href={{ auth_url }}>login</a>
+             {% endif %}
 	       </ul>       
         </nav>
         {% block stories %}
@@ -41,24 +39,54 @@
              {% for link in links %}
             <tr>
               <td align=right valign=top class="title">{{ loop.index }}.</td>
-              <td><center><a href="#"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
-              <td class="title"><a href={{ link.link}}>{{ link.headline}}</a><span class="sublink"> ({{link.main_url}}) </span></td>
+              {% if session['access_token'] %}
+                {% if username in voted_for(link) %}
+                  <td><center><a id="upvote"  data-id={{link.post_id}} href="/"><img src="static/img/s.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                {% else %}
+                  <td><center><a id="upvote" data-id={{link.post_id}} href="/"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                {% endif %}
+              {% else %}
+                <td><center><a id="upvote" title="Login to vote" data-id={{link.post_id}} href="/"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+              {% endif %}
+              <td class="title"><a href={{ link.link }}>{{ link.headline }}</a><span class="sublink"> ({{link.main_url}}) </span></td>
             </tr>
             <tr>
               <td colspan=2></td>
-              <td class="subtext">{{link.score}} points by @{{link.screen_name}} {{time[loop.index0]}} | comments</td>
+              <td class="subtext"><span id="score">{{link.score}}</span> point by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> | discuss</td>
             </tr>
             <tr style="height:1px"></tr>
             {% endfor %}
           </table>
           <br>
-          <div style="border-top: 2px solid #ff6600; font-size: 10pt;">
-            <h1 style="text-align: center; margin-top:5px;"> You need a Junior Developer? Great.</h1><h1 style="text-align: center">fnava621@gmail.com - Lets Chat</h1>
-          <br>
-          </div>
         </div>
         {% endblock %}
   </div>
 </div>
+
+{% if session['access_token'] %}
+  <script type=text/javascript>
+    $("a#upvote").click(function(event) {
+      event.preventDefault()
+      $.get("/_upvote", {a: $(this).data().id })
+    })
+  </script>
+  <script>
+   $("a#upvote img").click(function(event) {
+      event.preventDefault()
+      $(this).attr('src', 'static/img/s.gif')
+    })
+   </script>
+{% else %}
+  <script>
+    $(function () {
+      $("a#upvote").tipsy({gravity: 'e'});
+    })
+
+    $(function() {
+      $("li a#submit").tipsy();
+    })
+
+    </script>
+{% endif %}
 </body>
 </html>

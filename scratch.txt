@@ -1,0 +1,23 @@
+1. There are Posts
+2. There are Users - When user signs for first time Users
+   A user has Votes, comments, Submissions
+3. There are Votes.
+4. There are Submissionsk
+ (Post or Submissions same?)
+5. There are comments and subcomments
+
+
+Posts has Votes & Comments
+
+Votes has Users
+
+In template
+
+if {{ user in votes }}
+   show s.gift
+
+else show array.gift
+
+Someone votes up:
+
+        ajax query sends 

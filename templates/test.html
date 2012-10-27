@@ -1,0 +1,7 @@
+{% extends "show_links.html" %}
+{% block stories %}
+<a id="login" href={{ adn.generateAuthUrl() }}>login with app.net</a>
+<p>
+  <em>Is this safe?</em> We won't store your login in any database, just in a session which will expire all by itself. So yeah?
+</p>
+{% endblock %}
