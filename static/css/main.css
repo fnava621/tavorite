@@ -143,3 +143,44 @@ font-family: Verdana;
 font-size: 7pt;
 color: #828282;
 }
+
+/* submit form */
+
+form {
+    margin-left: 2%;
+}
+
+form fieldset {
+	margin: 0  0 10px 0;
+	padding: 0 0 10px 0;
+	font-size: 14px;
+	}
+
+form fieldset.form-actions {
+	margin: 0 0 0 4%;
+	padding: 0;
+	border: none;
+	}
+
+form fieldset label {
+	float: left;
+	width: 4%;
+	margin: 4px 0 5px 0;
+	font-weight: Normal;
+	}
+
+textarea, form fieldset input.form-text {
+	display: block;
+	width: 40%;
+	padding: 5px;
+	font-size: 10pt;
+	border: 1px solid #ddd;
+	background: #fff;
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+	-moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+	-webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	}
+

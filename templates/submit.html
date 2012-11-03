@@ -1,5 +1,29 @@
 {% extends "show_links.html" %}
 {% block stories %}
-<table>
-<tr style="height:10px"></tr><tr><td><form method=post action="/r"><input type=hidden name="fnid" value="Se998xJMgC"><table border=0><tr><td>title</td><td><input type=text name="t" value="" size=50></td></tr><tr><td>url</td><td><input type=text name="u" value="" size=50></td></tr><tr><td></td><td><b>or</b></td></tr><tr><td>text</td><td><textarea name="x" rows=4 cols=50></textarea></td></tr><tr><td></td><td><input type=submit value="submit"></td></tr><tr style="height:20px"></tr><tr><td></td></tr></table></form></td></tr></table>
+<form method="post" action="/submit">
+  <fieldset>
+    {% for x in form %}
+    <fieldset>
+    {% if x.id != "csrf_token" %}
+      {{ x.label }}
+    {% endif %}
+    {{ x(class="form-text") }}
+    {% if x.errors %}
+    <ul class="errors" style="margin-top: 20px"> {% for error in x.errors %}<li style="color:red"> {{error }}</li>{% endfor %}</ul>
+    {% endif %}
+  </fieldset>
+    {% endfor %}
+	<fieldset class="form-actions">
+		<input type="submit" value="Submit" />
+	</fieldset>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul class=flashe style="margin-top: 20px;">
+      {% for message in messages %}
+        <li style="color: red;">{{ message }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    {% endwith %}
+</form>
 {% endblock %}

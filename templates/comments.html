@@ -1,0 +1,77 @@
+{% extends "show_links.html" %}
+{% block stories %}
+<div class="links">
+  <table border=0 cellpadding=0 cellspacing=0>
+    <tr>
+              {% if session['access_token'] %}
+                {% if username in voted_for(link) %}
+                  {% if username == link.username %}
+                    <td><center><font color=#ff6600 size=2px>*</font><img src="/static/img/s.gif" border vspace=3 hspace=2 /></center></td>
+                  {% else %}
+                    <td><center><a id="upvote"  data-id={{link.post_id}} href="/"><img src="/static/img/s.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                  {% endif %}
+
+                {% else %}
+                  <td><center><a id="upvote" data-id={{link.post_id}} href="/"><img src="/static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                {% endif %}
+              {% else %}
+                <td><center><a id="upvote" title="Login to vote" data-id={{link.post_id}} href="/"><img src="/static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+              {% endif %}
+              <td class="title"><a href={{ link.link }}>{{ link.headline }}</a><span class="sublink"> ({{link.main_url}}) </span></td>
+    </tr>
+            <tr>
+              <td colspan=1></td>
+              {% set comment = "/comments/" ~ link.post_id %}
+              <td class="subtext"><span id="score">{{link.score}}</span> 
+                {% if link.score > 1 %} 
+                  {{ "points" }} 
+                {% else %} 
+                  {{"point"}} 
+                {% endif %} 
+                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> |<a class="subtext" style="text-decoration: none" href={{ comment }}> discuss</a></td>
+            </tr>
+            <tr style="height:1px"></tr>
+  </table>
+  {% set hit_url = "/comments/" ~ link.post_id %}
+  <form method="post" style="margin-top: 10px; margin-left: 5px;" action={{ hit_url }}>
+
+    <fieldset>
+       {% for x in form %}
+         {% if x.id != "csrf_token" %}
+           {{ x(rows="6",cols="60") }}
+         {% else %}
+           {{ x }}
+         {% endif %}
+       {% endfor %}
+
+       {% if session['access_token'] %}
+        <p></p>
+       {% else %}
+        <p style="font-size: 12px; color: #ff6600">(must be logged in to comment)</p>
+        {% endif %}
+    </fieldset>
+	<fieldset class="form-actions" style="margin-left: 0px;">
+		<input type="submit" style="margin-top: 0px;" value="Leave a comment" />
+	</fieldset>
+
+  </form>
+</div>
+
+
+<!--- comments from links here -->
+<div>
+{% if link.comments %}
+  {% for comment in link.comments recursive %}
+  <p> By {{comment.username}}</p>
+  {% set reply = "/reply/" ~ comment.comment_id %}
+  <p> {{comment.text}} </p><a href={{reply}}>Reply</a>
+  {% if comment.children %}
+    <div style="margin-left: 60px">{{ loop(comment.children) }}</div>
+  {% endif %}
+  {% endfor %}
+{% endif %}
+</div>
+  
+
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "show_links.html" %}
+{% block stories %}
+<div class="links">
+  <table border=0 cellpadding=0 cellspacing=0>
+    <tr>
+          <td> {{comment.text}} </td>
+          <td> {{comment.name}} </td>
+    </tr>
+  </table>
+
+    {% set hit_url = "/reply/" ~ comment.comment_id %}
+  <form method="post" style="margin-top: 10px; margin-left: 5px;" action={{ hit_url }}>
+
+    <fieldset>
+       {% for x in form %}
+         {% if x.id != "csrf_token" %}
+           {{ x(rows="6",cols="60") }}
+         {% else %}
+           {{ x }}
+         {% endif %}
+       {% endfor %}
+
+       {% if session['access_token'] %}
+        <p></p>
+       {% else %}
+        <p style="font-size: 12px; color: #ff6600">(must be logged in to reply)</p>
+        {% endif %}
+    </fieldset>
+	<fieldset class="form-actions" style="margin-left: 0px;">
+		<input type="submit" style="margin-top: 0px;" value="Reply" />
+	</fieldset>
+
+  </form>
+
+</div>
+
+{% endblock %}

@@ -5,6 +5,9 @@ from flask.ext.sqlalchemy import *
 from BeautifulSoup import BeautifulSoup
 from datetime import datetime, timedelta
 from adn import *
+from flask.ext.wtf.html5 import URLField
+from helpers import *
+    
 
 
 app = Flask(__name__)
@@ -13,53 +16,36 @@ app = Flask(__name__)
 
 db = SQLAlchemy(app)
 
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////Users/fernandonava/adn_news/test.db' 
+app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////Users/fernandonava/adn_news/test21.db' 
 
-
-#HEROKU CONFIG
-CLIENT_ID = 'sDndZTeGWmmd5tYEyRmm5WA6wpSdDBse'
-CLIENT_SECRET = 'jKPDXPHLPqdC49p6RqARTk5EwJWknJpW'
-REDIRECT_URL = 'http://127.0.0.1:5000/oauth/complete'
-ACCESS_TOKEN = 'AQAAAAAAAYmXp4Y26LOMsXwCGD9D2HajHMphN9PmTRlGeJWbwCc42Tikgn9YL5gBipybAiNeED35Wttje7K0y7HLbN-GkCigtA'
 
 app.secret_key = 'V\x16d|;\x8a\xff]&\x80n\xd7\x98\x01\xd1j\x06,\xa32\x97\xcf_\xfd'
-def voted_for(post):
-    if post:
-        return [x.username for x in post.votes.all()]
-    else: return []
 
-app_adn = Adn(access_token=ACCESS_TOKEN, client_id= CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
 
-filter_out_media = ['instagram.com', 'www.instagram.com', 'instagr.am', 'youtube.com', 'www.youtube.com', 'www.vimeo.com', 'vimeo.com', 'twitpic.com', 'www.twitpic.com', 'i.imgur.com', 'www.yfrog.com', 'twitter.yfrog.com','twitter.com', 'imgur.com', 't.co', 'join.app.net', 'd.pr', 'www.mobypicture.com', 'i.appimg.net', 'foursquare.com', 'www.foursquare.com', 'www.path.com', 'path.com', 'cl.ly', 'm.youtube.com', 'mobile.twitter.com', 'alpha.app.net', 'alpha-api.app.net', 'appnetizens.com', 'jer.srcd.mp', 'm.flickr.com'] 
- 
 
 @app.route('/')
 def home():
     links = Post.query.order_by(Post.date.desc()).filter(~Post.main_url.in_(filter_out_media)).limit(100).all()
 
-    adn = Adn(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
-
-    auth_url = adn.getAuthUrl()
 
     if 'access_token' in session:
-        auth_user = Adn(access_token=session['access_token'])
-        user = auth_user.getSelf()
-        username = user['username']
+        username = session['username']
         if not User.query.filter_by(username=username).first():
+            user = Adn(access_token=session['access_token']).getSelf()
             add_user_to_db = User(user, access_token=session['access_token'])
             db.session.add(add_user_to_db)
             db.session.commit()
 
-        return render_template('show_links.html', links=links, auth_url=auth_url, username=username, voted_for=voted_for)
+        return render_template('show_links.html', links=links, username=username, voted_for=voted_for, count_comments=count_comments)
     else:
-        return render_template('show_links.html', links=links, auth_url=auth_url)
+        return render_template('show_links.html', links=links, count_comments=count_comments)
 
 @app.route('/_upvote')
 def upvote():
     post_id = request.args.get('a', None)
     if 'access_token' in session:
         adn = Adn(access_token=session['access_token'])
-        user = adn.getSelf()['username']
+        user = session['username']
         post = Post.query.filter_by(post_id=post_id).first()
         if user not in voted_for(post) and post:
             post.score += 1
@@ -87,24 +73,124 @@ def photos():
     return render_template('photos.html', photos=photos)
 
 
-@app.route('/submit')
-def submit():
+@app.route('/comments/<int:post_id>', methods=['GET', 'POST'])
+def comments(post_id):
+    form = CommentForm()
+    link = Post.query.filter_by(post_id=post_id).first()
+
     if 'access_token' in session:
         adn = Adn(access_token=session['access_token'])
-        username = adn.getSelf()['username']
-        return render_template('submit.html', username=username)
+        username = session['username']
+
+        if request.method == "GET":
+            if link:
+                return render_template("comments.html", link=link, username=username, voted_for=voted_for, form=form)
+            else:
+                return render_template("404.html") 
+
+        if request.method == "POST" and form.validate():
+            comment = form.comment.data
+            comment = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite) #AdnNews", reply_to=link.post_id)
+            link.comments.append(Comment(comment, ))
+            db.session.commit()
+
+            return redirect(url_for("comments", post_id=link.post_id))
+            
+    else:
+        if link:
+            return render_template("comments.html", link=link, form=form)
+        else:
+            return render_template("404.html")
+
+
+
+#this should make children of reply to Comment
+@app.route('/reply/<int:comment_id>', methods=['GET', 'POST'])
+def reply(comment_id):
+    form = CommentForm()
+    comment =Comment.query.filter_by(comment_id=comment_id).first()
+    if 'access_token' in session:
+
+        username = session['username']
+        adn = Adn(access_token=session['access_token'])
+
+        if request.method == "GET":
+            if comment:
+                return render_template("reply.html", comment=comment, form=form, username=username, voted_for=voted_for)
+            else:
+                return render_template("404.html")
+
+        if request.method == 'POST' and form.validate():
+
+            reply = form.comment.data
+
+            reply_adn = adn.createPost(text="@" + comment.username + " " + reply + " (via @tavorite) #AdnNews", reply_to=comment.comment_id)
+
+            comment.children.append(Comment(reply_adn))
+
+            db.session.commit()
+
+            return redirect(url_for("home")) #redirect for comments/post_id
+
+    else:
+        if comment:
+            return render_template("reply.html", comment=comment, form=form)
+        else:
+            return render_template("404.html")
+            
+    
+    #redirect to comments page
+    
+
+
+
+
+@app.route('/submit', methods=['POST', 'GET'])
+def submit():
+
+    form = SubmitForm()
+
+    if 'access_token' in session:
+
+        adn = Adn(access_token=session['access_token'])
+        username = session['username']
+
+        if request.method == 'GET':
+            return render_template('submit.html', username=username, form=form)
+
+        if request.method == 'POST' and form.validate():
+            title = form.title.data
+            url = form.url.data
+            tavorite_post = adn.createPost(text=title + ": " + url + " (via @Tavorite)")
+            if tavorite_post['entities']['links']:
+                insert_post_to_db = Post(tavorite_post, score=2, headline=title)
+                vote_for_post     = Votes(username, insert_post_to_db)
+                db.session.add(insert_post_to_db)
+                db.session.add(vote_for_post)
+                db.session.commit()
+                return redirect(url_for("home"))
+            else:
+                flash("Something went wrong with your url, Try again!")
+                return redirect(url_for("submit"))
+        else:
+            return render_template("submit.html", username=username, form=form)
     return redirect(url_for("home"))
 
 @app.route('/best')
 def best():
     links = Post.query.order_by(Post.score.desc()).limit(50).all()
-    return render_template('best_of_week.html', links=links)
+    if 'access_token' in session:
+        username = session['username']
+        return render_template('best_of_week.html', links=links, username=username)
+    else:
+        return render_template('best_of_week.html', links=links)
 
 
 @app.route('/logout')
 def logout():
     if 'access_token' in session:
         session.pop('access_token', None)
+        session.pop('username', None)
         return redirect(url_for("home"))
     else:
         redirect(url_for("home"))
@@ -119,19 +205,14 @@ def complete():
 
         if "ERROR" not in adn.getAccessToken(code):
             session['access_token'] = adn.access_token
+            session['username'] = adn.getSelf()['username']
 
     return redirect(url_for("home"))
 
 
-@app.route('/show')
-def show():
-    if 'access_token' in session:
-        links = Post.query.order_by(Post.date.desc()).limit(50).all()
-        return render_template('show_links.html', links=links)
-    else:
-        return redirect(url_for('hello'))
-
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
           
@@ -154,9 +235,10 @@ class Post(db.Model):
     main_url        = db.Column(db.Unicode(300))
     date            = db.Column(db.DateTime)
     page_text       = db.Column(db.UnicodeText)
+    comments        = db.relationship('Comment', 
+                                      backref=db.backref('post'))
 
-    def __init__(self, post):
-
+    def __init__(self, post, score=1, headline=None):
         if post['entities']['links']:
             try:
                 r = requests.get(post['entities']['links'][0]['url'])
@@ -182,7 +264,7 @@ class Post(db.Model):
         self.post_id         = post['id']
         self.username        = post['user']['username']
         self.name            = post['user']['name']
-        self.score           = 1
+        self.score           = score
         self.score_with_time = 1.0
         self.std_deviation   = 1.0
         self.std_dev_sigma   = 1.0
@@ -191,7 +273,7 @@ class Post(db.Model):
         self.num_stars       = post['num_stars']
         self.num_replies     = post['num_replies']
         self.text            = post['text']
-        self.headline        = self.pull_headline(self.page_text)
+        self.headline        = self.pull_headline(headline, self.page_text)
 
 
     def turn_json(self, p):
@@ -199,27 +281,33 @@ class Post(db.Model):
         return post_str
 
 
-    def pull_headline(self, page_text):
+    def pull_headline(self, hline, page_text):
         h = HTMLParser.HTMLParser()
+        
+        
+        if hline:
+            return hline
+        else:
 
-        try:
-            soup = BeautifulSoup(page_text)
-        except:
-            soup = BeautifulSoup('')
+            try:
+                soup = BeautifulSoup(page_text)
+            except:
+                soup = BeautifulSoup('')
+        
 
-        if soup.findAll('title'):
-            title = soup.find('title')
-            content = title.renderContents()
-            decode = content.decode("utf-8")
-            unicode_text = h.unescape(decode)
-            clean_up_0 = self.remove_separator_and_extra_content(unicode_text, " - ")
-            #add self 
-            clean_up_1 = self.remove_separator_and_extra_content(clean_up_0, " \| ") 
-            clean_up_2 = self.remove_separator_and_extra_content(clean_up_1, " \// ")
-            #add self
-            return clean_up_2
-        else: 
-            return self.text
+            if soup.findAll('title'):
+                title = soup.find('title')
+                content = title.renderContents()
+                decode = content.decode("utf-8")
+                unicode_text = h.unescape(decode)
+                clean_up_0 = self.remove_separator_and_extra_content(unicode_text, " - ")
+            
+                clean_up_1 = self.remove_separator_and_extra_content(clean_up_0, " \| ") 
+                clean_up_2 = self.remove_separator_and_extra_content(clean_up_1, " \// ")
+            
+                return clean_up_2
+            else: 
+                return self.text
 
 
     def remove_separator_and_extra_content(self, content, separator): 
@@ -274,50 +362,31 @@ class Votes(db.Model):
         self.vote_date = datetime.utcnow()
         self.post = post
         
+        
 
-def every_two_minutes():
-    def only_links():
-        for x in app_adn.userStream(count=200):
-            if x['entities']['links']:
-                a = Post(x)
-                try:
-                    db.session.add(a)
-                    db.session.commit()
-                except:
-                    db.session.rollback()
-    #update every 30 seconds
-    s = sched.scheduler(time.time, time.sleep)
-    print "updating feed beginning"
-    s.enter(60, 1, only_links, ())
-    s.run()
-    every_two_minutes()
+class Comment(db.Model):
+    id         = db.Column(db.Integer, primary_key=True)
+    parent_id  = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    children   = db.relationship("Comment", 
+                               backref=db.backref("parent", remote_side=[id]))
+    post_id    = db.Column(db.Integer, db.ForeignKey('post.id'))
+    username   = db.Column(db.Unicode(256))
+    date       = db.Column(db.DateTime)
+    comment    = db.Column(db.UnicodeText)
+    score      = db.Column(db.Integer)
+    text       = db.Column(db.Integer(500))
+    comment_id = db.Column(db.BIGINT, unique=True)
+
+    def __init__(self, comment):
+        self.date       = datetime.utcnow()
+        self.username   = comment['user']['username']
+        self.score      = 1
+        self.text       = comment['text']
+        self.comment_id = comment['id']
+        self.comment    = json.dumps(comment)
+        
+
     
-      
-    
-def times_appears_in_stream(link, counter):
-    links_only = []
-    for x in counter:
-        links_only.append(x[0])
-    if link not in links_only:
-        return 1
-    else:
-        for x in counter:
-            if link in x[0]:
-                return x[1]
-
-def filter_for_double_links_from_same_person(all_links):
-    filtered_links = []
-    tweet_links = []
-    for lnk in all_links:
-        link = lnk.link
-        user_id = lnk.screen_name
-        if (link, user_id) not in filtered_links:
-            x = (link, user_id)
-            filtered_links.append(x)
-            tweet_links.append(link)
-    return tweet_links
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)

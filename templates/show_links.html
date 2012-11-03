@@ -20,15 +20,13 @@
              <li class="nav-item">|</li>
              <li class="nav-item"><a href="/videos">videos</a></li>
              <li class="nav-item">|</li>
-             <li class="nav-item"><a href="/best">best of week</a></li>
-             <li class="nav-item">|</li>
              <li class="nav-item"><a id="submit" title="Must be Logged In" href="/submit">submit</a></li>
              {% if session['access_token'] %}
                <li class="nav-item" style="float: right; padding-right:2px;"><a href="/logout">logout</a></li>
                <li class="nav-item" style="float: right; padding-right:2px;">|</li>
                <li class="nav-item" style="float: right; padding-right:2px;"><a href={{ "http://alpha.app.net/" + username }}>{{ username }}</a></li>
              {% else %}
-               <li class="nav-item" style="float: right;"><a href={{ auth_url }}>login</a>
+               <li class="nav-item" style="float: right;"><a href="https://alpha.app.net//oauth/authenticate?client_id=sDndZTeGWmmd5tYEyRmm5WA6wpSdDBse&response_type=code&redirect_uri=http://127.0.0.1:5000/oauth/complete&scope=stream%20email%20write_post%20follow%20messages%20export">login</a>
              {% endif %}
 	       </ul>       
         </nav>
@@ -40,8 +38,14 @@
             <tr>
               <td align=right valign=top class="title">{{ loop.index }}.</td>
               {% if session['access_token'] %}
+
                 {% if username in voted_for(link) %}
-                  <td><center><a id="upvote"  data-id={{link.post_id}} href="/"><img src="static/img/s.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                  {% if username == link.username %}
+                    <td><center><font color=#ff6600 size=2px>*</font><img src="static/img/s.gif" border vspace=3 hspace=2></center></td>
+                  {% else %}
+                    <td><center><a id="upvote"  data-id={{link.post_id}} href="/"><img src="static/img/s.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+                  {% endif %}
+
                 {% else %}
                   <td><center><a id="upvote" data-id={{link.post_id}} href="/"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
                 {% endif %}
@@ -52,7 +56,19 @@
             </tr>
             <tr>
               <td colspan=2></td>
-              <td class="subtext"><span id="score">{{link.score}}</span> point by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> | discuss</td>
+              {% set comment = "/comments/" ~ link.post_id %}
+              <td class="subtext"><span id="score">{{link.score}}</span> 
+                {% if link.score > 1 %} 
+                  {{ "points" }} 
+                {% else %} 
+                  {{"point"}} 
+                {% endif %} 
+                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> |<a class="subtext" style="text-decoration: none" href={{ comment }}>
+                  {% if link.comments %}
+                    {{ count_comments(link) }} {{ "comments" }} 
+                  {% else %}
+                    {{"discuss"}}
+                  {% endif %}</a></td>
             </tr>
             <tr style="height:1px"></tr>
             {% endfor %}
@@ -73,7 +89,7 @@
   <script>
    $("a#upvote img").click(function(event) {
       event.preventDefault()
-      $(this).attr('src', 'static/img/s.gif')
+      $(this).attr('src', '/static/img/s.gif')
     })
    </script>
 {% else %}
