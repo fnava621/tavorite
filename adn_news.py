@@ -290,7 +290,7 @@ def complete():
             session['username'] = adn.getSelf()['username']
             return redirect(url_for("home"))
         else:
-            return redict(url_for("home"))""
+            return redict(url_for("home"))"""
 
     return redirect(url_for("home"))
 
