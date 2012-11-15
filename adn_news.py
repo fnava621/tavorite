@@ -278,7 +278,9 @@ def logout():
 def complete():
     code = request.args.get('code', None)
     if code:
-        adn = Adn(client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=REDIRECT_URL)
+        adn = Adn(client_id=os.environ.get('CLIENT_ID'), 
+                  client_secret=os.environ.get('CLIENT_SECRET'), 
+                  redirect_uri=os.environ.get('REDIRECT_URL'))
 
         if "ERROR" not in adn.getAccessToken(code):
             session['access_token'] = adn.access_token
@@ -551,8 +553,7 @@ def add_comments(post_id):
     user = User.query.first()
     replies = tavorite.repliesToPost(post_id=post_id, count=200)
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
-    #replies = [x for x in replies if x.get('id') not in post_comments]
-
+   
     while a < len(replies):
         r = []
         for y in replies:
