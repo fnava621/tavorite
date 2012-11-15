@@ -27,7 +27,7 @@ def home():
     links = links[0:50]
 
     if 'access_token' in session:
-        #username = session['username']
+        username = session['username']
         if not User.query.filter_by(username=username).first():
             user = Adn(access_token=session['access_token']).getSelf()
             add_user_to_db = User(user, access_token=session['access_token'])
