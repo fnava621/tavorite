@@ -27,14 +27,13 @@ def home():
     links = links[0:50]
 
     if 'access_token' in session:
-        username = User.query.filter_by(access_token=session['access_token']).first().username
+        username = session['username']
 
-        if not username:
+        if not User.query.filter_by(username=username).first():
             user = Adn(access_token=session['access_token']).getSelf()
             add_user_to_db = User(user, access_token=session['access_token'])
             db.session.add(add_user_to_db)
             db.session.commit()
-            username = user['username']
         
         karma_score = User.query.filter_by(username=username).first().karma
 
@@ -284,9 +283,9 @@ def complete():
                   redirect_uri=os.environ.get('REDIRECT_URL'))
         
         adn.getAccessToken(code)
+        session['access_token'] = adn.access_token
+        return redirect(url_for("home"))
 
-    #adn.checkToken().get('user').get('username'))
-        return jsonify(access_token=adn.access_token)
      #  """if adn.access_token != "ERROR":
      #       session['access_token'] = adn.access_token
      #       #session['username'] = adn.getSelf()['username']
