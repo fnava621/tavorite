@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Alpha news</title>
+  <title>Tavorite</title>
   <link rel="shortcut icon" href="/static/img/lambda.gif">
   <link rel="stylesheet" href="/static/css/main.css">
   <link rel="stylesheet" href="/static/css/tipsy.css">
@@ -16,15 +16,18 @@
             <ul>
              <li><a href="/"><img src="/static/img/lambda.gif" alt="" /></a></li>
 		     <li><a class="nava" href="/">Tavorite</a></li>
+             <li class="nav-item"><a class={{newest_class}} href="/newest">new</a></li>
+             <li class="nav-item">|</li>
              <li class="nav-item"><a href="/photos">photos</a></li>
              <li class="nav-item">|</li>
-             <li class="nav-item"><a href="/videos">videos</a></li>
+             <li class="nav-item"><a class={{vid_class}} href="/videos">videos</a></li>
              <li class="nav-item">|</li>
-             <li class="nav-item"><a id="submit" title="Must be Logged In" href="/submit">submit</a></li>
+             <li class="nav-item"><a class={{sub_class}} id="submit" title="Must be Logged In" href="/submit">submit</a></li>
              {% if session['access_token'] %}
                <li class="nav-item" style="float: right; padding-right:2px;"><a href="/logout">logout</a></li>
                <li class="nav-item" style="float: right; padding-right:2px;">|</li>
-               <li class="nav-item" style="float: right; padding-right:2px;"><a href={{ "http://alpha.app.net/" + username }}>{{ username }}</a></li>
+               <li class="nav-item" style="float: right; padding-right:2px;">({{karma_score}})</li>
+               <li class="nav-item" style="float: right; padding-right:2px;"><a href={{ "http://alpha.app.net/" + username }}>{{username}}</a></li>
              {% else %}
                <li class="nav-item" style="float: right;"><a href="https://alpha.app.net//oauth/authenticate?client_id=sDndZTeGWmmd5tYEyRmm5WA6wpSdDBse&response_type=code&redirect_uri=http://127.0.0.1:5000/oauth/complete&scope=stream%20email%20write_post%20follow%20messages%20export">login</a>
              {% endif %}
@@ -63,12 +66,8 @@
                 {% else %} 
                   {{"point"}} 
                 {% endif %} 
-                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> |<a class="subtext" style="text-decoration: none" href={{ comment }}>
-                  {% if link.comments %}
-                    {{ count_comments(link) }} {{ "comments" }} 
-                  {% else %}
-                    {{"discuss"}}
-                  {% endif %}</a></td>
+                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>{{link.username }}</a> {{ age(link) }} |<a class="subtext" style="text-decoration: none" href={{ comment }}>
+                  {{ count_comments(link) }}</a></td>
             </tr>
             <tr style="height:1px"></tr>
             {% endfor %}
@@ -76,6 +75,11 @@
           <br>
         </div>
         {% endblock %}
+                  <br>
+          <div style="border-top: 2px solid #ff6600; font-size: 10pt;">
+            <h1 style="text-align: center; margin-top:5px;">Made by <a style="color: black;" href="http://alpha.app.net/nava">@nava</a></h1><h1 style="text-align: center">Suggestions? fnava621@gmail.com</h1>
+          <br>
+          </div>
   </div>
 </div>
 
@@ -103,6 +107,9 @@
     })
 
     </script>
+
+
 {% endif %}
+
 </body>
 </html>

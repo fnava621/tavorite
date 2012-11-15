@@ -6,20 +6,22 @@
              {% for link in videos %}
             <tr>
               <td align=right valign=top class="title">{{ loop.index }}.</td>
-              <td><center><a href="#"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
+              <td><center><a href="/"><img src="static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
               <td class="title"><a href={{ link.link}}>{{ link.headline }}</a><span class="sublink"> ({{link.main_url}}) </span></td>
             </tr>
             <tr>
               <td colspan=2></td>
-              <td class="subtext">{{ link.score}} points by @{{link.screen_name}} | comments</td>
+              <td class="subtext"><span id="score">{{link.score}}</span> 
+                {% if link.score > 1 %} 
+                  {{ "points" }} 
+                {% else %} 
+                  {{"point"}} 
+                {% endif %} 
+                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>{{link.username }}</a> {{ age(link) }} |<a class="subtext" style="text-decoration: none" href={{ comment }}>
+                  {{ count_comments(link) }}</a></td>
             </tr>
             <tr style="height:3px"></tr>
             {% endfor %}
           </table>
-          <br>
-          <div style="border-top: 2px solid #ff6600; font-size: 10pt;">
-            <h1 style="text-align: center; margin-top:5px;"> You need a Junior Developer? Great.</h1><h1 style="text-align: center">fnava621@gmail.com - Lets Chat</h1>
-          <br>
-          </div>
         </div>
 {% endblock %}

@@ -2,14 +2,17 @@
 {% block stories %}
 <div class="links">
   <table border=0 cellpadding=0 cellspacing=0>
+
     <tr>
-              {% if session['access_token'] %}
-                {% if username in voted_for(link) %}
-                  {% if username == link.username %}
+        {% if session['access_token'] %}
+            {% if username in voted_for(link) %}
+
+                {% if username == link.username %}
                     <td><center><font color=#ff6600 size=2px>*</font><img src="/static/img/s.gif" border vspace=3 hspace=2 /></center></td>
                   {% else %}
                     <td><center><a id="upvote"  data-id={{link.post_id}} href="/"><img src="/static/img/s.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
-                  {% endif %}
+                {% endif %}
+
 
                 {% else %}
                   <td><center><a id="upvote" data-id={{link.post_id}} href="/"><img src="/static/img/grayarrow.gif" border=0 vspace=3 hspace=2></a><span id="arrow"></center></td>
@@ -19,6 +22,7 @@
               {% endif %}
               <td class="title"><a href={{ link.link }}>{{ link.headline }}</a><span class="sublink"> ({{link.main_url}}) </span></td>
     </tr>
+
             <tr>
               <td colspan=1></td>
               {% set comment = "/comments/" ~ link.post_id %}
@@ -28,17 +32,21 @@
                 {% else %} 
                   {{"point"}} 
                 {% endif %} 
-                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>@{{link.username }}</a> |<a class="subtext" style="text-decoration: none" href={{ comment }}> discuss</a></td>
+                by <a class="subtext" style="text-decoration: none" href={{ "https://alpha.app.net/" + link.username }}>{{link.username }} {{age(link)}}</a> |<a class="subtext" style="text-decoration: none" href={{ comment }}> 
+            {{ count_comments(link) }}</a></td>
             </tr>
             <tr style="height:1px"></tr>
   </table>
   {% set hit_url = "/comments/" ~ link.post_id %}
-  <form method="post" style="margin-top: 10px; margin-left: 5px;" action={{ hit_url }}>
+  <form method="post" style="margin-top: 10px; margin-left: 5px; margin-bottom: 10px;" action={{ hit_url }}>
 
     <fieldset>
        {% for x in form %}
          {% if x.id != "csrf_token" %}
            {{ x(rows="6",cols="60") }}
+           {% if x.errors %}
+        <ul class="errors" style="margin-top: 20px"> {% for error in x.errors %}<li style="color:red"> {{error }}</li>{% endfor %}</ul>
+           {% endif %}
          {% else %}
            {{ x }}
          {% endif %}
@@ -57,16 +65,35 @@
   </form>
 </div>
 
-
 <!--- comments from links here -->
 <div>
 {% if link.comments %}
   {% for comment in link.comments recursive %}
-  <p> By {{comment.username}}</p>
+  {% if session['access_token'] %}
+  {% if session['username'] in voted_for(comment) %}
+
+    {% if session['username'] == comment.username %}
+     <h1 style="margin-left: 5px; color: #ff6600;" >*<span class="sublink"> {{comment.username}} {{age(comment) }}</span></h1>
+     <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+    {% else %}
+    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img style="width: 10px;" src="/static/img/s.gif"></a><span class="sublink"> {{comment.username}} {{ age(comment) }}</span></h1>
+ <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+    {% endif %}
+  {% else %}
+    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"> {{comment.username}} {{ age(comment) }}</span></h1>
+ <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+  {% endif %}
+  {% else %}
+  <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"> {{comment.username}} {{ age(comment) }}</span></h1>
+ <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+  {% endif %}
+
+
+
   {% set reply = "/reply/" ~ comment.comment_id %}
-  <p> {{comment.text}} </p><a href={{reply}}>Reply</a>
+  <a style="font-size: 8pt; color: black; margin-left: 20px;" href={{reply}}>reply</a>
   {% if comment.children %}
-    <div style="margin-left: 60px">{{ loop(comment.children) }}</div>
+    <div style="margin-left: 20px">{{ loop(comment.children) }}</div>
   {% endif %}
   {% endfor %}
 {% endif %}

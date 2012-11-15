@@ -6,7 +6,7 @@
   <div id="categories">
     <div class="H-container">
       <ul class="nav">
-        <li><a href="/news">ADN News</a></li>
+        <li><a href="/">Tavorite</a></li>
         <li><a class="underline" href="/photos">Photos</a></li>
         <li><a href="/videos">Videos</a></li>
       </ul>
@@ -19,15 +19,13 @@
 
       {% for photo in photos %}
       <div class="pin"><a href={{photo.picture}}><img src={{photo.picture}} alt="" /></a> 
-        <p class="description">{{photo.text}}</p>
-        <p class="stats">{{photo.retweet_count}} retweets</p>
+  <!---      <p class="description">{{photo.text}}</p> -->
         <div class="person attribution">
-          <a href={{ "http://twitter.com/" + photo.screen_name }} class="ImgLink"><img src={{ photo.profile_picture }} alt="profile picture" /></a>
-          <a href={{ "http://twitter.com/" + photo.screen_name }}><p>@{{photo.screen_name}}</p></a>
+          <a href={{ "http://alpha.app.net/" + photo.username}} class="ImgLink"><img src={{ photo.profile_picture }} alt="profile picture" /></a>
+          <a href={{ "http://alpha.app.net/" + photo.username }}><p>{{photo.username}}</p></a>
         </div>
       </div>
       {% endfor %}
-
 
     </div>
 

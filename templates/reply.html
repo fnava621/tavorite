@@ -1,20 +1,41 @@
 {% extends "show_links.html" %}
 {% block stories %}
 <div class="links">
-  <table border=0 cellpadding=0 cellspacing=0>
-    <tr>
-          <td> {{comment.text}} </td>
-          <td> {{comment.name}} </td>
-    </tr>
-  </table>
+
+{% macro reply_to(src) -%}
+  <h1 style="margin-left: 0px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="{{ src }}"></a><span class="sublink"> {{comment.username}} {{ age(comment) }}</span></h1>
+ <h1 style="margin-left: 13px"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+{%- endmacro %} 
+
+{% if session['access_token'] %}
+  {% if session['username'] in voted_for(comment) %}
+
+    {% if username == comment.username %}
+      <h1 style="margin-left: 0px; color: #ff6600;" >*<span class="sublink"> {{comment.username}} {{age(comment)}}</span></h1>
+      <h1 style="margin-left: 13px"><span class="title" style="color: black;"> {{comment.text}}</span></h1>
+    {% else %}
+        <h1 style="margin-left: 8px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="{{ src }}"></a><span class="sublink"> {{comment.username}} {{ age(comment) }}</span></h1>
+ <h1 style="margin-left: 13px"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
+    {% endif %}
+   {% else %}
+      {{ reply_to('/static/img/grayarrow.gif') }}
+  {% endif %}
+
+  {% else %}
+   {{ reply_to('/static/img/grayarrow.gif') }}
+{% endif %}
+
 
     {% set hit_url = "/reply/" ~ comment.comment_id %}
-  <form method="post" style="margin-top: 10px; margin-left: 5px;" action={{ hit_url }}>
+  <form method="post" style="margin-top: 10px; margin-left: 10px;" action={{ hit_url }}>
 
     <fieldset>
        {% for x in form %}
          {% if x.id != "csrf_token" %}
            {{ x(rows="6",cols="60") }}
+           {% if x.errors %}
+        <ul class="errors" style="margin-top: 20px"> {% for error in x.errors %}<li style="color:red"> {{error }}</li>{% endfor %}</ul>
+           {% endif %}
          {% else %}
            {{ x }}
          {% endif %}
@@ -29,6 +50,7 @@
 	<fieldset class="form-actions" style="margin-left: 0px;">
 		<input type="submit" style="margin-top: 0px;" value="Reply" />
 	</fieldset>
+ 
 
   </form>
 

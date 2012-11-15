@@ -39,6 +39,7 @@ class Adn:
             self.__dict__[key] = setFunc(key)
 
 
+
     def _constructFunc(self, api_call, **kwargs):
         # Go through and replace any mustaches that are in our API url.
         fn = api_table[api_call]

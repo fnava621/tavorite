@@ -137,6 +137,16 @@ api_table = {
         'method': 'GET',
         },
 
+    'userAvatar':  {
+        'url': '/stream/0/users/{{user_id}}/avatar',
+        'method': 'GET',
+        },
+    
+    'userCoverImage': {
+        'url': '/stream/0/users/{{user_id}}/cover',
+        'method': 'GET',
+        },
+
     # Streams, Filters, Realtime updates coming soon
 
     

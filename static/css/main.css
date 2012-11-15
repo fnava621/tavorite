@@ -184,3 +184,14 @@ textarea, form fieldset input.form-text {
 	border-radius: 4px;
 	}
 
+
+.nava .active {
+    color: black;
+}
+
+
+.nav-item a.active {
+
+    color: white;
+}
+
