@@ -137,13 +137,14 @@ def comments(post_id):
         if request.method == "POST" and form.validate():
             comment = form.comment.data
             comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
-            comment = Comment(comment_adn, comment)
+            return jsonify(result=comment_adn)
+            """comment = Comment(comment_adn, comment)
             votes = Votes(username, comment=comment)
             db.session.add(votes)
             link.comments.append(comment)
             db.session.commit()
 
-            return redirect(url_for("comments", post_id=link.post_id))
+            return redirect(url_for("comments", post_id=link.post_id))"""
 
         else:
             return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score)
