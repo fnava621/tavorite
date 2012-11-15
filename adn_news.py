@@ -28,13 +28,14 @@ def home():
 
 
     if 'access_token' in session:
-        username = User.query.filter_by(access_token=session['access_token']).first()
-        
+        username = User.query.filter_by(access_token=session['access_token']).first().username
+
         if not username:
             user = Adn(access_token=session['access_token']).getSelf()
             add_user_to_db = User(user, access_token=session['access_token'])
             db.session.add(add_user_to_db)
             db.session.commit()
+            username = user['username']
         
         karma_score = User.query.filter_by(username=username).first().karma
 
