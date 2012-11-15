@@ -137,14 +137,14 @@ def comments(post_id):
         if request.method == "POST" and form.validate():
             comment = form.comment.data
             comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
-            return jsonify(result=json.loads(comment_adn))
-            """comment = Comment(comment_adn, comment)
+            
+            comment = Comment(comment_adn['data'], text=comment)
             votes = Votes(username, comment=comment)
             db.session.add(votes)
             link.comments.append(comment)
             db.session.commit()
 
-            return redirect(url_for("comments", post_id=link.post_id))"""
+            return redirect(url_for("comments", post_id=link.post_id))
 
         else:
             return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score)
@@ -157,7 +157,7 @@ def comments(post_id):
 
 
 
-#this should make children of reply to Comment
+
 @app.route('/reply/<int:comment_id>', methods=['GET', 'POST'])
 def reply(comment_id):
     form = CommentForm()
@@ -180,7 +180,7 @@ def reply(comment_id):
             post = parent_post(comment)
 
             reply_adn = adn.createPost(text="@" + comment.username + " " + reply + " (via @tavorite)", reply_to=comment.comment_id)
-            c = Comment(reply_adn['data'], reply)
+            c = Comment(reply_adn['data'], text=reply)
             votes = Votes(username, comment=c)
 
             db.session.add(votes)
@@ -508,7 +508,7 @@ class Comment(db.Model):
     date       = db.Column(db.DateTime)
     comment    = db.Column(db.UnicodeText)
     score      = db.Column(db.Integer)
-    text       = db.Column(db.Integer(500))
+    text       = db.Column(db.Unicode(500))
     comment_id = db.Column(db.BIGINT, unique=True)
     com_text   = db.Column(db.UnicodeText)
     thread     = db.Column(db.Unicode(256))
