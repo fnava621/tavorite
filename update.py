@@ -4,7 +4,7 @@ from helpers import *
 
 def get_posts_update_db():
     last = Last.query.first()
-    t = tavorite.userStream(count=200, since_id=last.post_id)['data']
+    t = tavorite.userStream(count=200, since_id=last.post_id)
     for x in t:
         if x['entities']['links']:
             if x.get('id') == x.get('thread_id'):
@@ -45,10 +45,9 @@ def reduce_score_with_time():
     six_days_ago = datetime.utcnow() - timedelta(days=5)
     posts = Post.query.filter(Post.date > six_days_ago).all()
     for x in posts:
-        item_hour_age = ""
         x.score_with_time = hacker_news(x.score, link_age_in_hours(x))
         db.session.commit()
-    pass
+    print "Gravity at work"
 
 
 
@@ -61,9 +60,10 @@ def update_every_minute():
     s.run()
     update_posts_comments()
     reduce_score_with_time()
+    update_every_minute()
     """To continously loop recursive call update_every_minute()"""
 
 
 
 if __name__ == '__main__':
-    update_every_x_minutes()
+    update_every_minute()
