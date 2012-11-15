@@ -4,7 +4,7 @@ from helpers import *
 
 def get_posts_update_db():
     last = Last.query.first()
-    t = tavorite.userStream(count=200, since_id=last.post_id)
+    t = tavorite.userStream(count=200, since_id=last.post_id)['data']
     for x in t:
         if x['entities']['links']:
             if x.get('id') == x.get('thread_id'):

@@ -137,7 +137,7 @@ def comments(post_id):
         if request.method == "POST" and form.validate():
             comment = form.comment.data
             comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
-            comment = Comment(comment_adn, comment)
+            comment = Comment(comment_adn['data'], comment)
             votes = Votes(username, comment=comment)
             db.session.add(votes)
             link.comments.append(comment)
@@ -179,7 +179,7 @@ def reply(comment_id):
             post = parent_post(comment)
 
             reply_adn = adn.createPost(text="@" + comment.username + " " + reply + " (via @tavorite)", reply_to=comment.comment_id)
-            c = Comment(reply_adn, reply)
+            c = Comment(reply_adn['data'], reply)
             votes = Votes(username, comment=c)
 
             db.session.add(votes)
@@ -270,14 +270,12 @@ def complete():
                   redirect_uri=os.environ.get('REDIRECT_URL'))
 
         if adn.getAccessToken(code) != "ERROR":
-            session['access_token'] = adn.access_token
-            try:
-                session['username'] = adn.getSelf()['data']['username']
-                return redirect(url_for("home"))
-            except:
-                return jsonify(error="error in session[username]", access_token=adn.access_token)
-
-
+            session['access_token'] = adn.access_token                
+            session['username'] = adn.getSelf()['data']['username']
+            return redirect(url_for("home"))
+            
+        else:
+            return redirect(url_for("home"))
     return redirect(url_for("home"))
 
 
@@ -543,7 +541,7 @@ def add_comments(post_id):
     new_root = []
     root = [post_id]
     user = User.query.first()
-    replies = tavorite.repliesToPost(post_id=post_id, count=200)
+    replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
    
     while a < len(replies):
