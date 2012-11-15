@@ -283,7 +283,8 @@ def complete():
                   redirect_uri=os.environ.get('REDIRECT_URL'))
         
         adn.getAccessToken(code)
-        return jsonify(username="HELLO WORLD")
+        user = adn.checkToken().get('user').get('username')
+        return jsonify(username=user)
 
     #adn.checkToken().get('user').get('username'))
 
