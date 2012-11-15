@@ -28,7 +28,7 @@ def home():
 
 
     if 'access_token' in session:
-        username = User.query.filter_by(access_token=session['access_token').first()
+        username = User.query.filter_by(access_token=session['access_token']).first()
         
         if not username:
             user = Adn(access_token=session['access_token']).getSelf()
