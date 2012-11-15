@@ -116,7 +116,8 @@ class Adn:
         elif self.access_token:
             return self.access_token
         else:
-            return self.access_token = "ERROR"
+            self.access_token="ERROR"
+            return self.access_token
         
 
 

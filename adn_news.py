@@ -291,7 +291,7 @@ def complete():
         else:
             return redict(url_for("home"))
 
-    return redirect(url_for("home"))"""
+    return redirect(url_for("home"))
 
 
 @app.errorhandler(404)
