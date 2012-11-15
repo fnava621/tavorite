@@ -29,7 +29,7 @@ def home():
     if 'access_token' in session:
         username = session['username']
         if not User.query.filter_by(username=username).first():
-            user = Adn(access_token=session['access_token']).getSelf()
+            user = Adn(access_token=session['access_token']).getSelf()['data']
             add_user_to_db = User(user, access_token=session['access_token'])
             db.session.add(add_user_to_db)
             db.session.commit()
@@ -50,12 +50,6 @@ def videos():
 
     if 'access_token' in session:
         username = session['username']
-        if not User.query.filter_by(username=username).first():
-            user = Adn(access_token=session['access_token']).getSelf()
-            add_user_to_db = User(user, access_token=session['access_token'])
-            db.session.add(add_user_to_db)
-            db.session.commit()
-        
         karma_score = User.query.filter_by(username=username).first().karma
 
         return render_template('show_links.html', age=age, links=links, username=username, voted_for=voted_for, count_comments=count_comments, karma_score=karma_score, newest_class="not-active", vid_class="active", sub_class="not-active")
@@ -79,12 +73,6 @@ def newest():
 
     if 'access_token' in session:
         username = session['username']
-        if not User.query.filter_by(username=username).first():
-            user = Adn(access_token=session['access_token']).getSelf()
-            add_user_to_db = User(user, access_token=session['access_token'])
-            db.session.add(add_user_to_db)
-            db.session.commit()
-        
         karma_score = User.query.filter_by(username=username).first().karma
 
         return render_template('show_links.html', age=age, links=links, username=username, voted_for=voted_for, count_comments=count_comments, karma_score=karma_score, newest_class="active", vid_class="not-active", sub_class="not-active")
@@ -284,11 +272,10 @@ def complete():
         if adn.getAccessToken(code) != "ERROR":
             session['access_token'] = adn.access_token
             try:
-                session['username'] = str(adn.getSelf()['username'])
+                session['username'] = adn.getSelf()['data']['username']
                 return redirect(url_for("home"))
             except:
                 return jsonify(error="error in session[username]", access_token=adn.access_token)
-                
 
 
     return redirect(url_for("home"))
