@@ -287,7 +287,7 @@ def complete():
                 session['username'] = str(adn.getSelf()['username'])
                 return redirect(url_for("home"))
             except:
-                return jsonify(error="error in session[username]", access_token=adn.access_token))
+                return jsonify(error="error in session[username]", access_token=adn.access_token)
                 
 
 
