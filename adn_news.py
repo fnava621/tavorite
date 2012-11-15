@@ -28,7 +28,6 @@ def home():
 
     if 'access_token' in session:
         #username = session['username']
-        username = "tavorite"
         if not User.query.filter_by(username=username).first():
             user = Adn(access_token=session['access_token']).getSelf()
             add_user_to_db = User(user, access_token=session['access_token'])
@@ -281,17 +280,17 @@ def complete():
         adn = Adn(client_id=os.environ.get('CLIENT_ID'), 
                   client_secret=os.environ.get('CLIENT_SECRET'), 
                   redirect_uri=os.environ.get('REDIRECT_URL'))
-        
-        adn.getAccessToken(code)
-        session['access_token'] = adn.access_token
-        return redirect(url_for("home"))
 
-     #  """if adn.access_token != "ERROR":
-     #       session['access_token'] = adn.access_token
-     #       #session['username'] = adn.getSelf()['username']
-     #       return redirect(url_for("home"))
-     #   else:
-     #       return redict(url_for("home")"""
+        if adn.getAccessToken(code) != "ERROR":
+            session['access_token'] = adn.access_token
+            try:
+                session['username'] = adn.getSelf()['username']
+                return redirect(url_for("home"))
+            except:
+                return jsonify(error="error in session[username]")
+                
+
+  
 
     return redirect(url_for("home"))
 
