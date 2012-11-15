@@ -1,0 +1,1 @@
+web: python adn_news.py

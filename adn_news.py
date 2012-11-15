@@ -11,14 +11,13 @@ from helpers import *
 
 app = Flask(__name__)
 
-# db_config app.config['SQALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 
 db = SQLAlchemy(app)
 
-app.config['SQLALCHEMY_DATABASE_URI']='sqlite:////Users/fernandonava/adn_news/test2192.db' 
+app.secret_key = os.environ['APP_SECRET_KEY']
 
-
-app.secret_key = 'V\x17d|;\x8a\xff]&\x30n\xd7\x48\x01\xd1j\x03,\xa32\x97\xcf_\xfd'
+tavorite = Adn(access_token=os.environ['ACCESS_TOKEN'])
 
 
 @app.route('/')
@@ -27,7 +26,6 @@ def home():
     links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score > 2).limit(70).all()
     links = links[0:50]
 
-# if post.score < 4 and post.date < 1 hour old 
 
     if 'access_token' in session:
         username = session['username']
@@ -551,8 +549,7 @@ def add_comments(post_id):
     new_root = []
     root = [post_id]
     user = User.query.first()
-    adn= Adn(access_token=user.access_token)
-    replies = adn.repliesToPost(post_id=post_id, count=200)
+    replies = tavorite.repliesToPost(post_id=post_id, count=200)
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
     #replies = [x for x in replies if x.get('id') not in post_comments]
 
@@ -591,6 +588,6 @@ def add_comments(post_id):
 
 
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host'0.0.0.0', port=port)

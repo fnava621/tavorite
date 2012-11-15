@@ -1,14 +1,6 @@
 from adn_news import *
 from helpers import *
 
-# the code that will update score_with_time
-# the code that will updaet new posts adn
-# the code that will update new comments 
-
-
-user = User.query.first()
-
-tavorite = Adn(access_token=user.access_token)
 
 def get_posts_update_db():
     last = Last.query.first()
@@ -70,8 +62,6 @@ def update_every_minute():
     update_posts_comments()
     reduce_score_with_time()
     """To continously loop recursive call update_every_minute()"""
-
-
 
 
 
