@@ -284,13 +284,12 @@ def complete():
         if adn.getAccessToken(code) != "ERROR":
             session['access_token'] = adn.access_token
             try:
-                session['username'] = adn.getSelf()['username']
+                session['username'] = str(adn.getSelf()['username'])
                 return redirect(url_for("home"))
             except:
-                return jsonify(error="error in session[username]")
+                return jsonify(error="error in session[username]", access_token=adn.access_token))
                 
 
-  
 
     return redirect(url_for("home"))
 
