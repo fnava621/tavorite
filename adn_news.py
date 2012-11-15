@@ -286,14 +286,13 @@ def complete():
         adn.getAccessToken(code)
 
     #adn.checkToken().get('user').get('username'))
-        
         return jsonify(access_token=adn.access_token)
-       """if adn.access_token != "ERROR":
-            session['access_token'] = adn.access_token
-            #session['username'] = adn.getSelf()['username']
-            return redirect(url_for("home"))
-        else:
-            return redict(url_for("home"))"""
+     #  """if adn.access_token != "ERROR":
+     #       session['access_token'] = adn.access_token
+     #       #session['username'] = adn.getSelf()['username']
+     #       return redirect(url_for("home"))
+     #   else:
+     #       return redict(url_for("home")"""
 
     return redirect(url_for("home"))
 
