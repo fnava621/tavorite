@@ -281,13 +281,16 @@ def complete():
         adn = Adn(client_id=os.environ.get('CLIENT_ID'), 
                   client_secret=os.environ.get('CLIENT_SECRET'), 
                   redirect_uri=os.environ.get('REDIRECT_URL'))
-
-        if "ERROR" not in adn.getAccessToken(code):
+        
+        adn.getAccessToken(code)
+        
+        return jsonify(access_token=adn.access_token)
+        """if "ERROR" not in adn.getAccessToken(code):
             session['access_token'] = adn.access_token
             session['username'] = adn.getSelf()['username']
             return redirect(url_for("home"))
 
-    return redirect(url_for("home"))
+    return redirect(url_for("home"))"""
 
 
 @app.errorhandler(404)
