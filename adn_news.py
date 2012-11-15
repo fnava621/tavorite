@@ -137,7 +137,7 @@ def comments(post_id):
         if request.method == "POST" and form.validate():
             comment = form.comment.data
             comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
-            return jsonify(result=comment_adn)
+            return jsonify(result=json.loads(comment_adn))
             """comment = Comment(comment_adn, comment)
             votes = Votes(username, comment=comment)
             db.session.add(votes)
