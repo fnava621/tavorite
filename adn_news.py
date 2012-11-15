@@ -26,7 +26,6 @@ def home():
     links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score > 2).limit(70).all()
     links = links[0:50]
 
-
     if 'access_token' in session:
         username = User.query.filter_by(access_token=session['access_token']).first().username
 
