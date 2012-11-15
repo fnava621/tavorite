@@ -283,13 +283,14 @@ def complete():
                   redirect_uri=os.environ.get('REDIRECT_URL'))
         
         adn.getAccessToken(code)
-    
-        if adn.access_token != "ERROR":
-            session['access'] = adn.access_token
+        return jsonify(username=adn.getSelf()['username'])
+
+        """if adn.access_token != "ERROR":
+            session['access_token'] = adn.access_token
             session['username'] = adn.getSelf()['username']
             return redirect(url_for("home"))
         else:
-            return redict(url_for("home"))
+            return redict(url_for("home"))""
 
     return redirect(url_for("home"))
 
