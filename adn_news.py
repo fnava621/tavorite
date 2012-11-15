@@ -285,6 +285,7 @@ def complete():
         if "ERROR" not in adn.getAccessToken(code):
             session['access_token'] = adn.access_token
             session['username'] = adn.getSelf()['username']
+            return redirect(url_for("home"))
 
     return redirect(url_for("home"))
 
