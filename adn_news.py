@@ -284,7 +284,7 @@ def complete():
         
         adn.getAccessToken(code)
         
-        return jsonify(access_token=adn.getAccessToken(code)
+        return jsonify(access_token=adn.getAccessToken(code))
         """if "ERROR" not in adn.getAccessToken(code):
             session['access_token'] = adn.access_token
             session['username'] = adn.getSelf()['username']
