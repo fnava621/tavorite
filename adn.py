@@ -129,3 +129,15 @@ class Adn:
             r = requests.post(self.request_token_url, data=post_data)
             token = json.loads(r.text)
             return token['access_token']
+
+
+def bug(code):
+    post_data = {'client_id': os.environ.get('CLIENT_ID'),
+                     'client_secret': os.environ.get('CLIENT_SECRET'),
+                     'grant_type': 'authorization_code',
+                     'redirect_uri': os.environ.get('REDIRECT_URL'),
+                     'code': code}
+    url = 'https://alpha.app.net/oauth/access_token'
+    
+    r = requests.post(url, data=post_data)
+    return r
