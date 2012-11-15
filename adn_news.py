@@ -137,7 +137,7 @@ def comments(post_id):
         if request.method == "POST" and form.validate():
             comment = form.comment.data
             comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
-            comment = Comment(comment_adn['data'], comment)
+            comment = Comment(comment_adn, comment)
             votes = Votes(username, comment=comment)
             db.session.add(votes)
             link.comments.append(comment)
