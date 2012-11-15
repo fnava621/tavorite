@@ -225,7 +225,7 @@ def submit():
             title = form.title.data
             url = form.url.data
             tavorite_post = adn.createPost(text=title + ": " + url + " (via @Tavorite)")
-            if tavorite_post['entities']['links']:
+            if tavorite_post['data']['entities']['links']:
                 insert_post_to_db = Post(tavorite_post, score=2, headline=title)
                 vote_for_post     = Votes(username, post=insert_post_to_db)
                 db.session.add(insert_post_to_db)
