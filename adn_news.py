@@ -546,7 +546,6 @@ def add_comments(post_id):
     new_root = []
     root = [post_id]
     user = User.query.first()
-
     try:
         replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
     except:
