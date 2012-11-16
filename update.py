@@ -57,7 +57,7 @@ def update_every_minute():
 
     s = sched.scheduler(time.time, time.sleep)
     print "updating feed beginning"
-    s.enter(120, 1, get_posts_update_db, ())
+    s.enter(300, 1, get_posts_update_db, ())
     s.run()
     update_posts_comments()
     reduce_score_with_time()
