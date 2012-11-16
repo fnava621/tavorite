@@ -56,14 +56,14 @@ def update_every_minute():
 
     s = sched.scheduler(time.time, time.sleep)
     print "updating feed beginning"
-    s.enter(10, 1, get_posts_update_db, ())
+    s.enter(120, 1, get_posts_update_db, ())
     s.run()
     update_posts_comments()
     reduce_score_with_time()
     update_every_minute()
     """To continously loop recursive call update_every_minute()"""
 
-
+# every two minutes maybe needs to lengthened
 
 if __name__ == '__main__':
     update_every_minute()
