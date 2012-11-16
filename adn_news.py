@@ -69,7 +69,7 @@ def photos():
 @app.route('/newest')
 def newest():
 
-    links = Post.query.order_by(Post.date.desc()).filter(~Post.main_url.in_(newest_filter)).limit(50).all()
+    links = Post.query.order_by(Post.date.desc()).filter(~Post.main_url.in_(newest_filter)).filter(Post.picture == '').limit(50).all()
 
     if 'access_token' in session:
         username = session['username']
