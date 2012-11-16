@@ -546,7 +546,12 @@ def add_comments(post_id):
     new_root = []
     root = [post_id]
     user = User.query.first()
-    replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
+
+    try:
+        replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
+    except:
+        return "There was an Error in retrieving the post From ADN"
+
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
    
     while a < len(replies):

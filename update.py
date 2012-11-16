@@ -25,7 +25,7 @@ def get_posts_update_db():
 
 
 def update_posts_comments():
-    two_days_ago = datetime.utcnow() - timedelta(days=2)
+    two_days_ago = datetime.utcnow() - timedelta(days=1)
     posts = Post.query.filter(Post.date > two_days_ago).all()
     for x in posts:
         num_comments = number_of_comments(count_comments(x))
