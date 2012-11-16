@@ -29,7 +29,10 @@ def update_posts_comments():
     posts = Post.query.filter(Post.date > two_days_ago).all()
     for x in posts:
         num_comments = number_of_comments(count_comments(x))
-        current_replies = tavorite.repliesToPost(post_id=x.post_id, count=200)['data']
+        current_replies = tavorite.repliesToPost(post_id=x.post_id, count=200).get('data')
+        if current_replies == None:
+            current_replies = ["No replies"]
+
         num_replies = len(current_replies) - 1
         if num_comments < num_replies:
             x.score = num_replies
