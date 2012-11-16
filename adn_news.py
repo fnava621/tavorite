@@ -542,7 +542,7 @@ def add_comments(post_id):
     new_root = []
     root = [post_id]
     user = User.query.first()
-    replies = tavorite.repliesToPost(post_id=post_id, count=200)
+    replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
    
     while a < len(replies):

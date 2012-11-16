@@ -4,7 +4,7 @@ from helpers import *
 
 def get_posts_update_db():
     last = Last.query.first()
-    t = tavorite.userStream(count=200, since_id=last.post_id)
+    t = tavorite.userStream(count=200, since_id=last.post_id)['data']
     for x in t:
         if x['entities']['links']:
             if x.get('id') == x.get('thread_id'):
@@ -28,7 +28,7 @@ def update_posts_comments():
     posts = Post.query.filter(Post.date > two_days_ago).all()
     for x in posts:
         num_comments = number_of_comments(count_comments(x))
-        current_replies = tavorite.repliesToPost(post_id=x.post_id, count=200)
+        current_replies = tavorite.repliesToPost(post_id=x.post_id, count=200)['data']
         num_replies = len(current_replies) - 1
         if num_comments < num_replies:
             x.score = num_replies
