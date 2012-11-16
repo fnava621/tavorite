@@ -17,7 +17,7 @@ def get_posts_update_db():
         db.session.delete(last)
         db.session.commit()
 
-        track_last = Last(t[-1])
+        track_last = Last(t['data'][-1])
         db.session.add(track_last)
         db.session.commit()
 
