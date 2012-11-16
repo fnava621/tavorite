@@ -420,8 +420,12 @@ class Post(db.Model):
             
                 clean_up_1 = self.remove_separator_and_extra_content(clean_up_0, " \| ") 
                 clean_up_2 = self.remove_separator_and_extra_content(clean_up_1, " \// ")
-            
-                return clean_up_2
+                if clean_up_2 == unicode('403 Forbidden') or clean_up_2 == unicode('500 Internal Server Error'):
+                    a = self.text
+                    cleaned_up = a.lstrip("'").rstrip("'")
+                    return cleaned_up
+                else:
+                    return clean_up_2
             else: 
                 return self.text
 
