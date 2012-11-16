@@ -547,9 +547,10 @@ def add_comments(post_id):
     root = [post_id]
     user = User.query.first()
     try:
-        replies = tavorite.repliesToPost(post_id=post_id, count=200)['data']
+        replies = tavorite.repliesToPost(post_id=post_id, count=200).get('data')
     except:
-        return "There was an Error in retrieving the post From ADN"
+        relies = []
+        return "There was an error"
 
     post_comments = all_comment_ids_from_post(Post.query.filter_by(post_id=post_id).first())
    
