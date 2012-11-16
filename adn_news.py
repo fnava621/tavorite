@@ -23,7 +23,7 @@ tavorite = Adn(access_token=os.environ['ACCESS_TOKEN'])
 @app.route('/')
 def home():
     twenty_minutes_ago = datetime.utcnow() - timedelta(seconds=1200)
-    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).limit(70).all()
+    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).filter(Post.picture == '').limit(70).all()
     links = links[0:50]
 
     if 'access_token' in session:
