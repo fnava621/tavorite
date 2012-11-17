@@ -136,7 +136,11 @@ def comments(post_id):
 
         if request.method == "POST" and form.validate():
             comment = form.comment.data
-            comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
+            is_repost = json.loads(link.post).get('repost_of')
+            if is_repost:
+                comment_adn = adn.createPost(text="@" + is_repost.get('username') + " " + comment + " (via @tavorite)", reply_to=is_repost.get('id'))
+            else:
+                comment_adn = adn.createPost(text="@" + link.username + " " + comment + " (via @tavorite)", reply_to=link.post_id)
             
             comment = Comment(comment_adn['data'], text=comment)
             votes = Votes(username, comment=comment)
