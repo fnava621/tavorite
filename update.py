@@ -11,8 +11,11 @@ def get_posts_update_db():
                 if x.get('id') == x.get('thread_id'):
                     if not Post.query.filter_by(post_id=x.get('id')).first():
                         a = Post(x)
-                        db.session.add(a)
-                        db.session.commit()
+                        try:
+                            db.session.add(a)
+                            db.session.commit()
+                        except:
+                            db.session.rollback()
     
         db.session.delete(last)
         db.session.commit()
