@@ -79,8 +79,8 @@ def hacker_news(votes, item_hour_age, gravity=1.8):
 
 def reduce_score_with_time():
     """reduces posts score_with_time for last 5 days"""
-    six_days_ago = datetime.utcnow() - timedelta(days=5)
-    posts = Post.query.filter(Post.date > six_days_ago).all()
+    five_days_ago = datetime.utcnow() - timedelta(days=5)
+    posts = Post.query.filter(Post.date > five_days_ago).all()
     for x in posts:
         x.score_with_time = hacker_news(x.score, link_age_in_hours(x))
         db.session.commit()
@@ -95,9 +95,9 @@ def update_every_minute():
     print "updating feed beginning"
     s.enter(300, 1, get_posts_update_db, ())
     s.run()
-    update_posts_comments()
-    reduce_score_with_time()
     get_hashtag_update_db()
+    reduce_score_with_time()
+    update_posts_comments()    
     update_every_minute()
     """To continously loop recursive call update_every_minute()"""
 
@@ -105,3 +105,5 @@ def update_every_minute():
 
 if __name__ == '__main__':
     update_every_minute()
+    
+    
