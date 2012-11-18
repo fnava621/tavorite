@@ -16,13 +16,17 @@ def get_posts_update_db():
                             db.session.commit()
                         except:
                             db.session.rollback()
-    
-        db.session.delete(last)
-        db.session.commit()
 
-        track_last = Last(t['data'][0])
-        db.session.add(track_last)
-        db.session.commit()
+        if t['data']:
+            if int(t['data'][0]['id']) != last.post_id:
+                db.session.delete(last)
+                db.session.commit()
+
+                track_last = Last(t['data'][0])
+                db.session.add(track_last)
+                db.session.commit()
+            
+
 
 
 
