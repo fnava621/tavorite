@@ -73,18 +73,18 @@
   {% if session['username'] in voted_for(comment) %}
 
     {% if session['username'] == comment.username %}
-     <h1 style="margin-left: 5px; color: #ff6600;" >*<span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http:/alpha.app.net/" + comment.username}}> {{comment.username}}</a>{{age(comment) }}</span></h1>
+     <h1 style="margin-left: 5px; color: #ff6600;" >*<span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + comment.username}}> {{comment.username}}</a>{{age(comment) }}</span></h1>
      <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
     {% else %}
-    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img style="width: 10px;" src="/static/img/s.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http:/alpha.app.net/" + comment.username}}> {{comment.username}}</a>{{ age(comment) }}</span></h1>
+    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img style="width: 10px;" src="/static/img/s.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + comment.username}}> {{comment.username}}</a>{{ age(comment) }}</span></h1>
  <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
     {% endif %}
   {% else %}
-    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http:/alpha.app.net/" + comment.username}}>{{comment.username}}</a> {{ age(comment) }}</span></h1>
+    <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + comment.username}}> {{comment.username}}</a> {{ age(comment) }}</span></h1>
  <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
   {% endif %}
   {% else %}
-  <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http:/alpha.app.net/" + comment.username}}>{{comment.username}}</a> {{ age(comment) }}</span></h1>
+  <h1 style="margin-left: 5px"><a id="upvote" data-id={{comment.comment_id}} href="#" title="Login to vote"><img src="/static/img/grayarrow.gif"></a><span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + comment.username}}> {{comment.username}}</a> {{ age(comment) }}</span></h1>
  <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{comment.text}}</span></h1>
   {% endif %}
 
