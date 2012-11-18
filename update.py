@@ -50,6 +50,9 @@ def get_hashtag_update_db():
                 track_last = Hashtag(t['data'][0])
                 db.session.add(track_last)
                 db.session.commit()
+                return "Posts udpated from Hashtag"
+    else:
+        return "No posts were updated from Hashtag"
 
 
 

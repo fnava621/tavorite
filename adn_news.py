@@ -130,7 +130,7 @@ def comments(post_id):
         karma_score = User.query.filter_by(username=username).first().karma
         if request.method == "GET":
             if link:
-                return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score)
+                return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score, newest_class="not-active", vid_class="not-active", sub_class="not-active")
             else:
                 return render_template("404.html") 
 
@@ -151,11 +151,11 @@ def comments(post_id):
             return redirect(url_for("comments", post_id=link.post_id))
 
         else:
-            return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score)
+            return render_template("comments.html", count_comments=count_comments, age=age, link=link, username=username, voted_for=voted_for, form=form, karma_score=karma_score, newest_class="not-active", vid_class="not-active", sub_class="not-active")
             
     else:
         if link:
-            return render_template("comments.html", count_comments=count_comments, age=age, link=link, form=form)
+            return render_template("comments.html", count_comments=count_comments, age=age, link=link, form=form, newest_class="not-active", vid_class="not-active", sub_class="not-active")
         else:
             return render_template("404.html")
 
@@ -174,7 +174,7 @@ def reply(comment_id):
 
         if request.method == "GET":
             if comment:
-                return render_template("reply.html", age=age, comment=comment, form=form, username=username, voted_for=voted_for, karma_score=karma_score)
+                return render_template("reply.html", age=age, comment=comment, form=form, username=username, voted_for=voted_for, karma_score=karma_score, newest_class="not-active", vid_class="not-active", sub_class="not-active")
             else:
                 return render_template("404.html")
 
@@ -196,12 +196,12 @@ def reply(comment_id):
         
         else: 
             return render_template("reply.html", age=age, comment=comment, 
-                                   form=form, username=username, voted_for=voted_for, karma_score=karma_score)
+                                   form=form, username=username, voted_for=voted_for, karma_score=karma_score, newest_class="not-active", vid_class="not-active", sub_class="not-active")
             
 
     else:
         if comment:
-            return render_template("reply.html", age=age, comment=comment, form=form) 
+            return render_template("reply.html", age=age, comment=comment, form=form, newest_class="not-active", vid_class="not-active", sub_class="not-active") 
         else:
             return render_template("404.html")
             
