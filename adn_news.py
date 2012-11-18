@@ -466,6 +466,17 @@ class Last(db.Model):
       self.post_id  = post['id']
 
 
+class Hashtag(db.Model):
+    
+  id       = db.Column(db.Integer, primary_key=True)
+  username = db.Column(db.Unicode(256))
+  post_id  = db.Column(db.BIGINT, unique=True)
+                     
+  def __init__(self, post):
+      self.username = post['user']['username']
+      self.post_id  = post['id']
+
+
 class User(db.Model):
 
     id              = db.Column(db.Integer, primary_key=True)
