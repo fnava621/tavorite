@@ -4,6 +4,16 @@ from helpers import *
 
 def get_posts_update_db():
     last = Last.query.first()
+    last_in_post_db = Post.query.order_by(Post.id.desc()).first()
+
+    if last.post_id < last_in_post_db.post_id:
+        db.session.delete(last)
+        db.session.commit()
+        new_last = Last(json.loads(last_in_post_db.post))
+        db.session.add(new_last)
+        db.session.commit
+        last = Last.query.first()
+
     t = tavorite.userStream(count=200, since_id=last.post_id)
     if t.get('meta').get('code') == 200:    
         for x in t['data']:
@@ -25,7 +35,7 @@ def get_posts_update_db():
                 track_last = Last(t['data'][0])
                 db.session.add(track_last)
                 db.session.commit()
-            
+    
 
 def get_hashtag_update_db():
     hashtag = Hashtag.query.first()
