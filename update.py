@@ -6,7 +6,7 @@ def get_posts_update_db():
     last = Last.query.first()
     last_in_post_db = Post.query.order_by(Post.id.desc()).first()
 
-    if last.post_id < last_in_post_db.post_id:
+    if last == None or last.post_id < last_in_post_db.post_id:
         db.session.delete(last)
         db.session.commit()
         new_last = Last(json.loads(last_in_post_db.post))
