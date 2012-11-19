@@ -112,8 +112,8 @@ def update_every_minute():
     s.run()
     print "updating hashtag posts"
     get_hashtag_update_db()
-#    reduce_score_with_time()
-#    update_posts_comments()    
+    reduce_score_with_time()
+    update_posts_comments()    
     return update_every_minute()
     """To continously loop recursive call update_every_minute()"""
 
