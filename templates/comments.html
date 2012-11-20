@@ -67,7 +67,7 @@
 
 <!--- comments from links here -->
 <div>
-<h1 style="margin-left: 5px; color: #ff6600;" >*<span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + link.username}}> {{link.username}}</a>{{age(comment) }}</span></h1>
+<h1 style="margin-left: 5px; color: #ff6600;" >*<span class="sublink"><a class="sublink" style="text-decoration: none" href={{"http://alpha.app.net/" + link.username}}> {{link.username}}</a>{{age(link) }}</span></h1>
 <h1 style="margin-left: 19px;"></a><span class="title" style="color: black; font-size: 9pt;"> {{link.text}}</span></h1>
 {% if link.comments %}
   {% for comment in link.comments recursive %}
