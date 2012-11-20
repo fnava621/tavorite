@@ -391,11 +391,22 @@ class Post(db.Model):
         self.num_reposts     = post['num_reposts']
         self.num_stars       = post['num_stars']
         self.num_replies     = post['num_replies']
-        self.text            = post['text']
+        self.text            = self.clean_up_text(post)
         self.headline        = self.pull_headline(headline, self.page_text)
         self.thread          = post['thread_id']
 
 
+    def clean_up_text(self, p):
+        if self.link:
+            x = p['entities']['links']
+            links = [y.get('text') for y in x]
+            new_sentence = p.get('text')
+            for h in links:
+                new_sentence = re.sub(h, "", new_sentence)
+            return new_sentence
+        else:
+            self.text = post['text']
+                
     def turn_json(self, p):
         post_str = json.dumps(p)
         return post_str
