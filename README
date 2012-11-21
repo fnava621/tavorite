@@ -1,1 +1,25 @@
-<h1>Hacker News for App Dot Net - www.tavorite.com </h1>
+# Hacker News for App Dot Net - www.tavorite.com
+
+# Quick Start Instructions
+
+* Create a venv `virtualenv --no-site-packages venv`
+* Activate your environment `source venv/bin/activate`
+* install the packages `pip install -r requirements.txt`
+* Add some information to your environment in development it might be easier to use sqlite
+
+```sh
+export DATABASE_URL="sqlite:///test.db"
+export APP_SECRET_KEY="<Your Secret Key>"
+export ACCESS_TOKEN="<Your Access Token>"
+```
+
+* Once you have all the information in your enviroment you can now create the database. Open a shell.
+
+```sh
+>>> from adn_news import db
+>>> db.create_all()
+```
+
+* Now your DB should be created
+* Next you can run the dev server `python adn_news.py`
+* And now you should be able to visit http://127.0.0.1:5000 to see your site running
