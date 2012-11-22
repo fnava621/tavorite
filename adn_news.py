@@ -16,6 +16,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL')
 db = SQLAlchemy(app)
 
 app.secret_key = os.environ['APP_SECRET_KEY']
+app.client_id = os.environ['APP_CLIENT_ID']
 
 tavorite = Adn(access_token=os.environ['ACCESS_TOKEN'])
 

@@ -2,6 +2,18 @@ from adn_news import *
 from helpers import *
 
 
+def process_post(x):
+    if x['entities'] and x['entities']['links']:
+        if x.get('id') == x.get('thread_id'):
+            if not Post.query.filter_by(post_id=x.get('id')).first():
+                a = Post(x)
+                try:
+                    db.session.add(a)
+                    db.session.commit()
+                except:
+                    db.session.rollback()
+
+
 def get_posts_update_db():
     last = Last.query.first()
     last_in_post_db = Post.query.order_by(Post.id.desc()).first()
@@ -20,17 +32,9 @@ def get_posts_update_db():
         last = Last.query.first()
 
     t = tavorite.userStream(count=200, since_id=last.post_id)
-    if t.get('meta').get('code') == 200:    
+    if t.get('meta').get('code') == 200:
         for x in t['data']:
-            if x['entities']['links']:
-                if x.get('id') == x.get('thread_id'):
-                    if not Post.query.filter_by(post_id=x.get('id')).first():
-                        a = Post(x)
-                        try:
-                            db.session.add(a)
-                            db.session.commit()
-                        except:
-                            db.session.rollback()
+            process_post(x)
 
         if t['data']:
             if int(t['data'][0]['id']) != last.post_id:
@@ -40,7 +44,7 @@ def get_posts_update_db():
                 track_last = Last(t['data'][0])
                 db.session.add(track_last)
                 db.session.commit()
-    
+
 
 def get_hashtag_update_db():
     hashtag = Hashtag.query.first()
