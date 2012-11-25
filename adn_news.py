@@ -4,7 +4,6 @@ from flask import *
 from flask.ext.sqlalchemy import *
 from BeautifulSoup import BeautifulSoup
 from adn import *
-from flask.ext.wtf.html5 import URLField
 from helpers import *
 
 
@@ -61,7 +60,6 @@ def videos():
 
 @app.route('/photos')
 def photos():
-    media = ['instagram.com', 'www.instagram.com', 'instagr.am']
     photos = Post.query.order_by(Post.date.desc()).filter(Post.picture > '').limit(50).all()
     return render_template('photos.html', photos=photos)
 

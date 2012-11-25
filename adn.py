@@ -39,8 +39,6 @@ class Adn:
         for key in api_table.keys():
             self.__dict__[key] = setFunc(key)
 
-
-
     def _constructFunc(self, api_call, **kwargs):
         # Go through and replace any mustaches that are in our API url.
         fn = api_table[api_call]
@@ -135,8 +133,6 @@ class Adn:
         else:
             self.access_token="ERROR"
             return self.access_token
-        
-
 
     def getClientToken(self):
         if self.client_id and self.client_secret:

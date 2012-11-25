@@ -30,3 +30,8 @@ To use streaming_update.py you need to get an App Access Token, and build a stre
 1. Get our App Access Token: `python manage.py get_app_access_token`
 1. Put that in your enviroments: `export APP_ACCESS_TOKEN="<App Access Token>"`
 1. Now you can run streaming_update.py: `python streaming_update.py`
+
+# Contributors 
+
+Alex Kessinger - [@voidfiles](http://alpha.app.net/voidfiles)
+Fernando Nava  - [@nava](http://alpha.app.net/nava)
