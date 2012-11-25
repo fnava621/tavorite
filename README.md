@@ -33,5 +33,5 @@ To use streaming_update.py you need to get an App Access Token, and build a stre
 
 # Contributors 
 
-Alex Kessinger - [@voidfiles](http://alpha.app.net/voidfiles)
-Fernando Nava  - [@nava](http://alpha.app.net/nava)
+* Alex Kessinger - [@voidfiles](http://alpha.app.net/voidfiles)
+* Fernando Nava  - [@nava](http://alpha.app.net/nava)
