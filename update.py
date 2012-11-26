@@ -31,7 +31,7 @@ def get_posts_update_db():
         db.session.commit
         last = Last.query.first()
 
-    t = tavorite.userStream(count=200, since_id=last.post_id)
+    t = tavorite.globalStream(count=200, since_id=last.post_id)
     if t.get('meta').get('code') == 200:
         for x in t['data']:
             process_post(x)
@@ -51,16 +51,7 @@ def get_hashtag_update_db():
     t = tavorite.taggedPosts(hashtag='tavorite', count=200, since_id=hashtag.post_id)
     if t.get('meta').get('code') == 200:    
         for x in t['data']:
-            if x['entities']['links']:
-                if x.get('id') == x.get('thread_id'):
-                    if not Post.query.filter_by(post_id=x.get('id')).first():
-                        a = Post(x)
-                        try:
-                            db.session.add(a)
-                            db.session.commit()
-                        except:
-                            db.session.rollback()
-
+            process_post(x)
         if t['data']:
             if int(t['data'][0]['id']) != hashtag.post_id:
                 db.session.delete(hashtag)
