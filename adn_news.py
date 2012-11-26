@@ -16,15 +16,17 @@ db = SQLAlchemy(app)
 
 app.secret_key = os.environ['APP_SECRET_KEY']
 app.client_id = os.environ['APP_CLIENT_ID']
+app.client_secret = os.environ['APP_CLIENT_SECRET']
+
 
 tavorite = Adn(access_token=os.environ['ACCESS_TOKEN'])
 
 
 @app.route('/')
 def home():
+    five_days_ago = datetime.utcnow() - timedelta(days=5)      
     twenty_minutes_ago = datetime.utcnow() - timedelta(seconds=1200)
-    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).filter(Post.picture == '').limit(70).all()
-    links = links[0:50]
+    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).filter(Post.picture == '').filter(Post.date > five_days_ago).limit(50).all()
 
     if 'access_token' in session:
         username = session['username']
