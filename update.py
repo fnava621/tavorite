@@ -87,13 +87,20 @@ def update_posts_comments():
 def hacker_news(votes, item_hour_age, gravity=1.8):
     return votes/pow((item_hour_age+2), gravity)
 
-def reduce_score_with_time():
-    """reduces posts score_with_time for last 5 days - BUG"""
-    five_days_ago = datetime.utcnow() - timedelta(days=5)
-    posts = Post.query.filter(Post.date > five_days_ago).all()
-    for x in posts:
-        x.score_with_time = hacker_news(x.score, link_age_in_hours(x))
-        db.session.commit()
+def reduce_score_with_time(days_old=[1,2,3,4,5]):
+    def reduce_score(time_old):
+        if time_old == 1:
+            one_day_ago = datetime.utcnow() - timedelta(days=1)
+            post = Post.query.filter(Post.date > one_day_ago).all()
+        else:
+            frm = datetime.utcnow() - timedelta(days=(time_old-1))
+            to = datetime.utcnow() - timedelta(days=time_old)
+            post = Post.query.filter(Post.date < frm, Post.date > to).all()
+        for x in post:
+            x.score_with_time = hacker_news(x.score, link_age_in_hours(x))
+            db.session.commit()
+    for x in days_old:
+        reduce_score(x)
     print "Gravity at work"
 
 
