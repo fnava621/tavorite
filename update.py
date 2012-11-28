@@ -88,7 +88,7 @@ def hacker_news(votes, item_hour_age, gravity=1.8):
     return votes/pow((item_hour_age+2), gravity)
 
 def reduce_score_with_time():
-    """reduces posts score_with_time for last 5 days"""
+    """reduces posts score_with_time for last 5 days - BUG"""
     five_days_ago = datetime.utcnow() - timedelta(days=5)
     posts = Post.query.filter(Post.date > five_days_ago).all()
     for x in posts:

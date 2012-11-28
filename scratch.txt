@@ -1,1 +1,13 @@
 memcache
+
+
+-- BUGS --
+
+1. add_comments function should be inside of update_comments function to reduce API calls
+
+2. reduce_score_with_time - too much memory. 
+   should be reduce_score_with_time(days_old=1)
+             reduce_score_with_time(days_old=2)
+             reduce_score_with_time(days_old=3)
+             
+             THIS WOULD reduce score for posts that are five days old or less 1 day at a time 

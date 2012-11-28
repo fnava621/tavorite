@@ -26,7 +26,7 @@ tavorite = Adn(access_token=os.environ['ACCESS_TOKEN'])
 def home():
     five_days_ago = datetime.utcnow() - timedelta(days=5)      
     twenty_minutes_ago = datetime.utcnow() - timedelta(seconds=1200)
-    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).filter(Post.picture == '').filter(Post.date > five_days_ago).limit(50).all()
+    links = Post.query.order_by(Post.score_with_time.desc()).filter(~Post.main_url.in_(filter_out_media)).filter(Post.date < twenty_minutes_ago).filter(Post.score >= 2).filter(Post.picture == '').filter(Post.date > five_days_ago).limit(30).all()
 
     if 'access_token' in session:
         username = session['username']
@@ -48,7 +48,7 @@ def home():
 def videos():
     twenty_minutes_ago = datetime.utcnow() - timedelta(seconds=1200)
     media = ['www.youtube.com', 'youtube.com', 'vimeo.com', 'www.vimeo.com']
-    links = Post.query.order_by(Post.score_with_time.desc()).filter(Post.main_url.in_(media)).filter(Post.date < twenty_minutes_ago).limit(50).all()
+    links = Post.query.order_by(Post.score_with_time.desc()).filter(Post.main_url.in_(media)).filter(Post.date < twenty_minutes_ago).limit(30).all()
 
     if 'access_token' in session:
         username = session['username']
@@ -70,7 +70,7 @@ def photos():
 @app.route('/newest')
 def newest():
 
-    links = Post.query.order_by(Post.date.desc()).filter(~Post.main_url.in_(newest_filter)).filter(Post.picture == '').limit(50).all()
+    links = Post.query.order_by(Post.date.desc()).filter(~Post.main_url.in_(newest_filter)).filter(Post.picture == '').limit(30).all()
 
     if 'access_token' in session:
         username = session['username']
