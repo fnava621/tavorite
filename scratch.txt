@@ -6,3 +6,7 @@ memcache
 1. add_comments function should be inside of update_comments function to reduce API calls
 
 2. Front page Redesign
+
+3. Score will be num_stars, num_reposts, num_comments
+
+
