@@ -108,19 +108,18 @@ def reduce_score_with_time(days_old=[1,2,3,4,5]):
 def update_every_minute():
     """Automates - every X minutes gets new post and update those posts if they have additional comments"""
 
-    #s = sched.scheduler(time.time, time.sleep)
+    s = sched.scheduler(time.time, time.sleep)
     print "updating feed beginning"
-    #s.enter(300, 1, get_posts_update_db, ())
-    #s.run()
+    s.enter(300, 1, get_posts_update_db, ())
+    s.run()
     get_posts_update_db()
     print "updating hashtag posts"
-    get_hashtag_update_db()
     reduce_score_with_time()
     update_posts_comments()    
     return update_every_minute()
     """To continously loop recursive call update_every_minute()"""
 
-# heroku scheduler runs every 10 minutes
+
 
 if __name__ == '__main__':
     update_every_minute()
