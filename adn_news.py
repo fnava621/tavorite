@@ -279,10 +279,9 @@ def complete():
             session['access_token'] = adn.access_token                
             session['username'] = adn.getSelf()['data']['username']
             return redirect(url_for("home"))
-            
-        else:
-            return redirect(url_for("home"))
-    return redirect(url_for("home"))
+     
+    return (code, adn.getAccessToken(code))
+    #return redirect(url_for("home"))
 
 
 @app.errorhandler(404)
