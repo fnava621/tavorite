@@ -271,16 +271,16 @@ def logout():
 def complete():
     code = request.args.get('code', None)
     if code:
-        adn = Adn(client_id=os.environ.get('CLIENT_ID'), 
-                  client_secret=os.environ.get('CLIENT_SECRET'), 
-                  redirect_uri=os.environ.get('REDIRECT_URL'))
+        adn = Adn(client_id=os.environ.get('APP_CLIENT_ID'), 
+                  client_secret=os.environ.get('APP_CLIENT_SECRET'), 
+                  redirect_uri=os.environ.get('APP_REDIRECT_URL'))
 
         if adn.getAccessToken(code) != "ERROR":
             session['access_token'] = adn.access_token                
             session['username'] = adn.getSelf()['data']['username']
             return redirect(url_for("home"))
      
-    return (code, adn.getAccessToken(code))
+    return jsonify(code=code, access_token=adn.getAccessToken(code))
     #return redirect(url_for("home"))
 
 
